@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 let audioContext;
 let frequencyData;
 let analyserNode;
@@ -9,42 +7,29 @@ let audio;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-
-  // Optional:
-  // If the user inserts/removes bluetooth headphones or pushes
-  // the play/pause media keys, we can use the following to ignore the action
   navigator.mediaSession.setActionHandler("pause", () => {});
 }
 
 function mousePressed() {
-  // Only initiate audio upon a user gesture
   if (!audioContext) {
     audioContext = new AudioContext();
 
-    // Make a stream source, i.e. MP3, microphone, etc
-    // In this case we choose an <audio> element
     audio = document.createElement("audio");
 
-    // Upon loading the audio, let's play it
     audio.addEventListener(
       "canplay",
       () => {
-        // First, ensure the context is in a resumed state
         audioContext.resume();
-        // Now, play the audio
         audio.play();
       },
       { once: true }
     );
 
-    // Enable looping
     audio.loop = true;
 
-    // Set source
     audio.crossOrigin = "Anonymous";
-    audio.src = "audio/piano.mp3";
+    audio.src = "audio/bluejeans.mp3";
 
-    // Connect source into the WebAudio context
     const source = audioContext.createMediaElementSource(audio);
     source.connect(audioContext.destination);
 
@@ -65,19 +50,16 @@ function mousePressed() {
   }
 }
 
-// Convert the frequency in Hz to an index in the array
 function frequencyToIndex(frequencyHz, sampleRate, frequencyBinCount) {
   const nyquist = sampleRate / 2;
   const index = Math.round((frequencyHz / nyquist) * frequencyBinCount);
   return Math.min(frequencyBinCount, Math.max(0, index));
 }
 
-// Convert an index in a array to a frequency in Hz
 function indexToFrequency(index, sampleRate, frequencyBinCount) {
   return (index * sampleRate) / (frequencyBinCount * 2);
 }
 
-// Get the normalized audio signal (0..1) between two frequencies
 function audioSignal(analyser, frequencies, minHz, maxHz) {
   if (!analyser) return 0;
   const sampleRate = analyser.context.sampleRate;
@@ -96,7 +78,6 @@ function audioSignal(analyser, frequencies, minHz, maxHz) {
   return map(valueDb, minDb, maxDb, 0, 1, true);
 }
 
-// Find the frequency band that has the most peak signal
 function audioMaxFrequency(analyserNode, frequencies) {
   let maxSignal = -Infinity;
   let maxSignalIndex = 0;
@@ -190,7 +171,6 @@ function draw() {
   }
 }
 
-// Draw a basic polygon, handles triangles, squares, pentagons, etc
 function polygon(x, y, radius, sides = 3, angle = 0) {
   beginShape();
   for (let i = 0; i < sides; i++) {
