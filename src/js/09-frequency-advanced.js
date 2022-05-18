@@ -104,7 +104,6 @@ function windowResized() {
 }
 
 function draw() {
-  // fill background
   background(240);
   noStroke();
 
@@ -163,7 +162,6 @@ function draw() {
   }
 
   if (!audioContext) {
-    // Draw a play button
     const dim = min(width, height);
     fill("white");
     noStroke();

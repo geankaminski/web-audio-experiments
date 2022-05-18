@@ -1,7 +1,5 @@
-// Master volume in decibels
 const volume = -2;
 
-// The synth we'll use for audio
 let synth;
 
 let risoColors;
@@ -9,30 +7,23 @@ let colorJSON;
 let active = false;
 
 function preload() {
-  // loads a JSON as an object
   colorJSON = loadJSON("js/riso-colors.json");
 }
 
-// Create a new canvas to the browser size
 function setup() {
   createCanvas(windowWidth, windowHeight);
   background("black");
 
-  // unpack the JSON object as an array
   risoColors = Object.values(colorJSON);
 
-  // Make the volume quieter
   Tone.Master.volume.value = volume;
 
-  // Setup a synth with ToneJS
   synth = new Tone.Synth({
     oscillator: {
       type: "sine",
     },
   });
 
-  // Wire up our nodes:
-  // synth->master
 
   var feedbackDelay = new Tone.FeedbackDelay("8n", 0.6);
   synth.connect(feedbackDelay);
@@ -42,14 +33,11 @@ function setup() {
   frameRate(25);
 }
 
-// On window resize, update the canvas size
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
 
-// Render loop that draws shapes with p5
 function draw() {
-  // We slowly clear each frame
   const opacity = 0.05;
   background(0, 0, 0, opacity * 255);
 
@@ -61,16 +49,12 @@ function draw() {
   }
 }
 
-// Update mouse position and play a sound
 function mousePressed() {
-  // First time we click...
   if (!active) {
     active = true;
-    // Clear background to white to create an initial flash
     background(255);
   }
 
-  // choose a note
   const note = random(["A3", "C4", "D4", "E3", "G4"]);
   synth.triggerAttackRelease(note, "8n");
 
@@ -104,7 +88,6 @@ function mousePressed() {
   }
 }
 
-// Draw a basic polygon, handles triangles, squares, pentagons, etc
 function polygon(x, y, radius, sides = 3, angle = 0) {
   beginShape();
   for (let i = 0; i < sides; i++) {

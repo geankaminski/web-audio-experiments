@@ -1,47 +1,34 @@
-// Master volume in decibels
 const volume = -15;
 
-// The synth we'll use for audio
 let synth;
 
-// Create a new canvas to the browser size
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
-  // Clear with black on setup
   background(0);
 
-  // Make the volume quieter
   Tone.Master.volume.value = volume;
 
-  // Setup a synth with ToneJS
   synth = new Tone.Synth({
     oscillator: {
       type: "sine",
     },
   });
 
-  // Wire up our nodes:
-  // synth->master
   synth.connect(Tone.Master);
 }
 
-// On window resize, update the canvas size
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
 
-// Render loop that draws shapes with p5
 function draw() {
   const dim = Math.min(width, height);
 
-  // Black background
   background(0);
 
-  // Get a 0..1 value for the mouse
   const u = max(0, min(1, mouseX / width));
 
-  // Choose a frequency that sounds good
   const frequency = lerp(75, 2500, u);
   synth.setNote(frequency);
 
@@ -58,8 +45,6 @@ function draw() {
       const x = t * width;
       let y = height / 2;
 
-      // This is not an accurate representation, but
-      // instead exaggerated for the sake of visualization
       const frequencyMod = lerp(1, 1000, pow(u, 5));
       const amplitude = sin(time + t * frequencyMod);
 
@@ -70,23 +55,19 @@ function draw() {
     endShape();
   }
 
-  // Draw a 'play' button
   noStroke();
   fill(255);
   polygon(width / 2, height / 2, dim * 0.1, 3);
 }
 
-// Update the FX and trigger synth ON
 function mousePressed() {
   synth.triggerAttack();
 }
 
-// Trigger synth OFF
 function mouseReleased() {
   synth.triggerRelease();
 }
 
-// Draw a basic polygon, handles triangles, squares, pentagons, etc
 function polygon(x, y, radius, sides = 3, angle = 0) {
   beginShape();
   for (let i = 0; i < sides; i++) {
